@@ -1,22 +1,18 @@
-pipeline {
-    agent { label "Jenkins-Agent" }
-    environment {
-              APP_NAME = "register-app-pipeline"
+pipeline{
+    agent{
+        label 'agent-1'
     }
-
-    stages {
-        stage("Cleanup Workspace") {
-            steps {
-                cleanWs()
-            }
+    environment{
+        APP_NAME = "register-app-pipeline"
+    }
+    stages{
+        stage('cleanup workspace'){
+            cleanWs()
         }
+        stage('checkout from scm'){
+          git branch: 'main', credentialsId: 'github', url: 'https://github.com/GArunkumar999/register-app.git'
 
-        stage("Checkout from SCM") {
-               steps {
-                   git branch: 'main', credentialsId: 'github', url: 'https://github.com/Ashfaque-9x/gitops-register-app'
-               }
         }
-
         stage("Update the Deployment Tags") {
             steps {
                 sh """
@@ -26,20 +22,18 @@ pipeline {
                 """
             }
         }
-
         stage("Push the changed deployment file to Git") {
             steps {
                 sh """
-                   git config --global user.name "Ashfaque-9x"
-                   git config --global user.email "ashfaque.s510@gmail.com"
+                   git config --global user.name "GArunkumar999"
+                   git config --global user.email "giddaluruarunkumar9@gmail.com"
                    git add deployment.yaml
                    git commit -m "Updated Deployment Manifest"
                 """
                 withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
-                  sh "git push https://github.com/Ashfaque-9x/gitops-register-app main"
+                  sh "git push https://github.com/GArunkumar999/gitops-register-app-cd.git main"
                 }
             }
         }
-      
     }
 }
