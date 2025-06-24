@@ -12,7 +12,10 @@ pipeline{
              }
         }
         stage('checkout from scm'){
-          git branch: 'main', credentialsId: 'github', url: 'https://github.com/GArunkumar999/register-app.git'
+            steps{
+                 git branch: 'main', credentialsId: 'github', url: 'https://github.com/GArunkumar999/register-app.git'
+
+            }
 
         }
         stage("Update the Deployment Tags") {
